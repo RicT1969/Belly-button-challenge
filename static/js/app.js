@@ -1,62 +1,88 @@
-// //Set up the url as a constant variable to get data endpoint
+// //Set up the url as a variable to retrieve data
 
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
-// Fetch the JSON data and console log it for inspection of data formats
-d3.json(url).then(function(data) {
-  
 
+
+// Fetch the JSON data and console log it for inspection of data formats
+d3.json(url).then((data) => {
+  console.log(data);
+});
 //----------------------------------------------------------------------------------------
 //data holds 3 main arrays:
 //metadata - with details of the test subject
 //names - with the ids of test subjects
 //samples - with details of the bacteria found.
+
+
 //----------------------------------------------------------------------------------------
 //Structure of code  - set up dashboard and elements and then automate selection functions
 //----------------------------------------------------------------------------------------
+// My first step was to set up the requsite charts and elements (using the first subject - subject 940).
+// The commented out code relates to that inital stage, before being replaced with updated code allowing 
+// for the dashboard to be interactive.
 
+//variable to hold the subject's id for the drop-down and charts
 
-// Initialize variables to hold data as arrays
-
-// variable for Names array
-    let names = data.names; 
-      console.log(names);
-
-  //variable for Metadata array  
-    let meta = data.metadata;
-      console.log(meta);
+//   //variable for Metadata array  
+//     let meta = data.metadata;
+//       console.log(meta); 
     
-  //variable for Sample array
-    let samples = data.samples;
-      console.log(samples);
+//   //variable for Sample array
+//     let samples = data.samples;
+//       console.log(samples);
 
 
-  function sampleId(subjectId) {
-      return subjectId.id;
-    };
+//   function sampleId(subjectId) {
+//       return subjectId.id;
+//     };
 
-//*************************************************************************************** */
-  //Function to build Dropdown menu.
-//*************************************************************************************** */
-// On change to the DOM, call getData()
-let dropDown = d3.selectAll("#selDataset")
+//***************************************************************************************
+  //Build Dropdown menu.
+//***************************************************************************************
 
-  names.forEach((id) => {
-  dropDown.append("option")
-  .text(id)
-  .property("value",id);
 
-});
-// set up a vairable to hold the selected id
+// set up function for plots and to allow dropdown to retrieve data
 
-// //*************************************************************************************** */   
-//   //Function to build bar chart
-// //*************************************************************************************** */
-  let sample = samples.filter(sampleId);
+function init() {
+  let dropDown = d3.selectAll("#selDataset"); 
+    
+  d3.json(url).then(function(data) {
+    console.log(data);
+
+    let name = data.names; 
+    console.log(name);
+
+    // Function to go through the names array and add to append.  
+      // let dropdownMenu = d3.select("#selDataset");
+      name.forEach((id) => {
+      dropDown.append("option").text(id).property("value",id);
+      });
+    
+      let nameId = name[0];
+
+    // call functions for dashboard elements and for the inital display of data (using the first name.i: 940)
+    barChart(nameId);
+    demographicPanel(nameId);
+    bubbleChart(nameId); 
+})};
+
+// //***************************************************************************************   
+//   //Build bar chart
+// //***************************************************************************************
   
-  //Retrieve the element at index 0 in sample array (this will help for user selection)
+// //---------------------------------------------------------------------------------------
+// // **structure of sample array**
+// //   id - the test subject id
+// //   otu_ids - the specimen samples
+// //   otu_labels - specimen names
+// //   sample_vales
 
-  sampleChart = sample[0];
+// //---------------------------------------------------------------------------------------
+function barChart(selected) {
+  // Fetch the JSON data and console log it
+  d3.json(url).then((data) => {
+      console.log(data);
 
 // //------------------------------------------------------------------------------------------
 // // **structure of sample array**
@@ -66,42 +92,40 @@ let dropDown = d3.selectAll("#selDataset")
 // //   sample_vales
 
 // //-----------------------------------------------------------------------------------------
- //Retrieve elements required for chart and assign to variables
- let specimenId = sampleChart.otu_ids;
- let specimenLabels = sampleChart.otu_labels;
- let specimenValues = sampleChart.sample_values;
-
- //Sort and slice SampleValues for chart
-   // Sort the array in descending order of occurrence and assign the results to a variable
-  let sorted = specimenValues.sort((a, b) => b.sampleVal - a.sampleVal);
-
-  // slice sample values to produce the top 10 results
-  let sliceValues = sorted.slice(0,10);
  
-  // Reverse the array to accommodate Plotly's defaults
-  let reverseValue = sliceValues.reverse();
+// extract samples' array from the fetched data
+let samples = data.samples;
 
-  //Set variable for the rollover text
-  let idName = specimenLabels.map(object =>`otu_ ${specimenLabels}`);
+//Filter sample array to find objects where the id property matches the selectedValue
+let filterVal = samples.filter(sample => sample.id === selected);
 
- // Setup y-axis labels for label.id
+// let sortedVal = filterVal.sort((a,b) => b.otu_id - a.otu_id)
 
- let specimenSlice = specimenId.slice(0,10);
- let sortSpec = specimenSlice.map(id => `otu_ ${id} `);
+let sampleVal = filterVal[0];
 
- let specimens = sortSpec.reverse();
+let specimenValues = sampleVal.sample_values;
+let specimenId = sampleVal.otu_ids;
+let specimenLabels = sampleVal.otu_labels;
 
+
+//display only top ten values in descending order
+let yaxis = specimenId.slice(0,10).map(id => `otu_ ${id} `).reverse();
+let xaxis = specimenValues.slice(0,10).reverse();
+let text = specimenLabels.slice(0,10).reverse();
+
+console.log(xaxis, yaxis)
+    
 let trace1 = {
-  x: reverseValue,
-  y: specimens, //Label otu_ids on the y-axis
-  text: idName,// Label otu_labels as hover text
+  x: xaxis,//value of sample_values
+  y: yaxis, //Label otu_ids on the y-axis
+  text: text,// Label otu_labels as hover text
   type: 'bar',
   orientation: 'h'
 };
 
 //Set up the layout of the Chart
 let layout = {
-  title: `The Top Ten Bacterial Species Found in Subject ${sampleChart.id}`
+  title: `The Top Ten Bacterial Species Found in Subject ${sampleVal.id}`
 }
 
 //Set up the trace variable for the chart
@@ -109,66 +133,105 @@ let traceData = [trace1];
 
 Plotly.newPlot('bar', traceData, layout);
 
+  });
+}
 // ***************************************************************************************
-//   Function to build Demographic summary
+//   Populate Demographic Summary
 // ***************************************************************************************
 //Filter based on the value of the sample
+function demographicPanel(selected) {
 
-// let value = meta.filter(result => result.id == subjectId);
-// Get the first index from the array
-let demographic = meta[0];
-// let subjectData = value[0]
-console.log(demographic);
+  d3.json(url).then((data) => {
+    console.log(data);
 
-const panelBody = d3.select("#sample-metadata");
+  // extract metadata array from the fetched data
+  let meta = data.metadata;
+  console.log(meta); 
 
-// // Clear the panel body
-panelBody.html("");
+ //Filter metadata array to find objects where the id property matches the selectedValue
+  let filteredMeta = meta.filter((subject) => subject.id == selected);
+  console.log(filteredMeta);
+  
+  let subjectMeta = filteredMeta[0];
 
-// // Iterate over the data object and append the key-val
-// //ue pairs as paragraphs
-Object.entries(demographic).forEach(([key, value]) => {
-  console.log(key, value);
+  console.log(subjectMeta);
 
-  d3.select("#sample-metadata").append("h5").text(`${key}: ${value}`);
-        });
+  // Clear child elements in panel body
+  const panelBody = d3.select("#sample-metadata");
+  panelBody.html("");
 
+  // // Iterate over the data object and append key-value pairs
+  Object.entries(subjectMeta).forEach(([key, value]) => {
+    console.log(key, value);
+
+    //Add a h5 child element for each key-value pair to the div with id sample-metadata
+    d3.select("#sample-metadata").append("h5").text(`${key}: ${value}`);
+    });
+})};
 // ***************************************************************************************
 //  Build Bubble Graph
 // *************************************************************************************** 
-    //Use vairables set in the bar graph
-      // call variable for sample data
-      // let specimenId = sampleChart.otu_ids;
-      // let specimenLabels = sampleChart.otu_labels;
-      // let specimenValues = sampleChart.sample_values;
 
-      // Log the data to the console
-      console.log(specimenId,specimenLabels,specimenValues);
-      
-      // Set up the trace for bubble chart
-      let trace2 = {
-          x: specimenId,
-          y: specimenValues,
-          text: specimenLabels,
-          type: "bubble",
-          mode: "markers",
-          marker: {
-              size: specimenValues,
-              color: specimenId,
-              colorscale: "Earth"
-          }
-      };
+// Function for bubble chart
+function bubbleChart(selected) {
 
-      // Set up the layout
-      let layout2 = {
-          title: `Types of Bacteria Found in Subject ${sampleChart.id}`,
-          hovermode: "closest",
-          xaxis: {title: "OTU ID"},
-      };
+  // Fetch the JSON data and console log it
+  d3.json(url).then((data) => {
+    console.log(data);
 
-      // // Call Plotly to plot the bubble chart
-      Plotly.newPlot("bubble", [trace2], layout2)
+    // extract samples' array from the fetched data
+    let samples = data.samples;
 
-    });
+    //Filter sample array to find objects where the id property matches the selectedValue 
+    let filterVal = samples.filter((subject) => subject.id === selected);
 
+    let sampleVal = filterVal[0];
+
+    let sampleValues = sampleVal.sample_values;
+    let sampleId = sampleVal.otu_ids;
+    let sampleLabels = sampleVal.otu_labels;
+
+  console.log(sampleId, sampleValues)
+  // Set up the trace for bubble chart
+  // select colurscale - https://plotly.com/javascript/colorscales/#custom-colorscale
+  let trace2 = {
+    x: sampleId,
+    y: sampleValues,
+    text: sampleLabels,
+    type: "bubble",
+    mode: "markers",
+    marker: {
+        size: sampleValues,
+        color: sampleId,
+        colorscale: "Electric"
+    }
+  };
+
+  // Set up the layout
+  let layout2 = {
+      title: `Types of Bacteria Found in Subject ${sampleVal.id}`,
+      hovermode: "closest",
+      xaxis: {title: "OTU ID"},
+  };
+
+    // // Call Plotly to plot the bubble chart
+    Plotly.newPlot("bubble", [trace2], layout2);
+  });  
+                                                    
+}
+
+// Function to update dashboard when new sample selected
+function optionChanged(newValue) { 
+
+  // Log the new value
+  console.log(newValue); 
+
+  // Call all functions 
+  barChart(newValue);
+  demographicPanel(newValue);
+  bubbleChart(newValue);
+ 
+};
+
+ init();
 // ***************************************************************************************
