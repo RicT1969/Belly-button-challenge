@@ -14,29 +14,6 @@ d3.json(url).then((data) => {
 //names - with the ids of test subjects
 //samples - with details of the bacteria found.
 
-
-//----------------------------------------------------------------------------------------
-//Structure of code  - set up dashboard and elements and then automate selection functions
-//----------------------------------------------------------------------------------------
-// My first step was to set up the requsite charts and elements (using the first subject - subject 940).
-// The commented out code relates to that inital stage, before being replaced with updated code allowing 
-// for the dashboard to be interactive.
-
-//variable to hold the subject's id for the drop-down and charts
-
-//   //variable for Metadata array  
-//     let meta = data.metadata;
-//       console.log(meta); 
-    
-//   //variable for Sample array
-//     let samples = data.samples;
-//       console.log(samples);
-
-
-//   function sampleId(subjectId) {
-//       return subjectId.id;
-//     };
-
 //***************************************************************************************
   //Build Dropdown menu.
 //***************************************************************************************
@@ -99,7 +76,7 @@ let samples = data.samples;
 //Filter sample array to find objects where the id property matches the selectedValue
 let filterVal = samples.filter(sample => sample.id === selected);
 
-// let sortedVal = filterVal.sort((a,b) => b.otu_id - a.otu_id)
+filterVal.sort((a,b) => b.otu_id - a.otu_id)
 
 let sampleVal = filterVal[0];
 
@@ -203,7 +180,7 @@ function bubbleChart(selected) {
     marker: {
         size: sampleValues,
         color: sampleId,
-        colorscale: "Electric"
+        colorscale: "Earth"
     }
   };
 
