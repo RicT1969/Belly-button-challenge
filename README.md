@@ -4,8 +4,7 @@ An interactive dashboard to explore the Belly Button Biodiversity dataset. It li
   <li>a barchart of the top ten bacteria by number found in each subject's navel;</li>
   <li>a panel with the demographic information about the subject (including id, gender, age etc,);</li>
   <li>a bubble chart showing all bacterial specimens per subject by size of population.</li></ol></p>
- 
-<p>The bar chart and bubble chart both utise hovertext to display the quantity and the type of bacteria for each sample logged (the top tem in the case og the bar chart) and all samples in the case of the bubble chart</p>. 
+<p>The bar chart and bubble chart both utise hovertext to display the quantity and the type of bacteria for each sample logged (the top tem in the case og the bar chart) and all samples in the case of the bubble chart.</p>
 <p><h3>Notes on the code:</h3><ol>
   <li>I first approached the task plotting out the individual elements with only one smaple showing</li>
   <li>The task of making the graphs interactive proved more challenging and I had to rewrite elements of the code to allow this to happen</li>
