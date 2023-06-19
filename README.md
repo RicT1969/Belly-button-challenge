@@ -34,7 +34,7 @@ An interactive dashboard to explore the Belly Button Biodiversity dataset. It li
   <li>We extract the samples array from the fetched data, containing details of the bacteria found and filter to obtain the id property matching the selected value and a trace object (trace2) defined with x, y, text, and other properties.</li>
   <li>The layout of the graph (layout2) is set up, including the title, hover mode, colour scheme (https://plotly.com/javascript/colorscales) and axis labels. The trace object is placed inside an array and passed to Plotly.newPlot() along with the layout to create the bubble graph in the HTML element with the ID "bubble".</li></ul>
 <li>Update Dashboard:</li><ul>
-</li>The optionChanged(newValue) function is called when a new sample is selected from the dropdown menu. The barChart(), demographicPanel(), and bubbleChart() functions are called again with the new selected value to update the charts and data.</li></u>
+<li>The optionChanged(newValue) function is called when a new sample is selected from the dropdown menu. The barChart(), demographicPanel(), and bubbleChart() functions are called again with the new selected value to update the charts and data.</li></u>
 
  <p><h3>Sources</h3><ul>
 <li>https://www.encodedna.com/javascript/populate-select-dropdown-list-with-json-data-using-javascript.htm</li>
