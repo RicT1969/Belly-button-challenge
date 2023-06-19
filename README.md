@@ -1,10 +1,10 @@
 # Belly-button-challenge
 An interactive dashboard to explore the Belly Button Biodiversity dataset. It links to an external site, and catalogues the microbes that colonise human navels.
-<p>The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare. This is displayed through 3 interactive charts which are displayed on a free static page hosting service (GitHub pages, such as GitHub Pages) using JavaScript. The html file (including css) were provided withint he starter code). The displays are driven by a drop down menu allowing the selection of a subject id (from 153 subjects) and include:<ol>
+<p>The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare. This is displayed through 3 interactive charts which are displayed on a free static page hosting service (GitHub pages, such as GitHub Pages) using JavaScript. The html file (including css) were provided withint he starter code).</p><p>The displays are driven by a drop down menu allowing the selection of a subject id (from 153 subjects) and include:<ol>
   <li>a barchart of the top ten bacteria by number found in each subject's navel;</li>
   <li>a panel with the demographic information about the subject (including id, gender, age etc,);</li>
   <li>a bubble chart showing all bacterial specimens per subject by size of population.</li></ol></p>
-<p>The bar chart and bubble chart both utise hovertext to display the quantity and the type of bacteria for each sample logged (the top tem in the case og the bar chart) and all samples in the case of the bubble chart.</p>
+<p>The bar chart and bubble chart both utilise hovertext to display the quantity and the type of bacteria for each sample logged (the top tem in the case og the bar chart) and all samples in the case of the bubble chart.</p>
 <p><h2>Notes on the code:</h2><ol>
 <li>JavaScript code fetches the JSON data, populates a dropdown menu with test subject IDs, generates a bar chart, displays demographic information, and creates a bubble graph based on the selected test subject. The dashboard can be updated by selecting different test subjects from the dropdown menu.</li>
 <li>Data Retrival</li><ul>
